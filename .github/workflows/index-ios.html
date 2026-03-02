@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="HIMKO Biology">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#1e7e34">
+    <title>HIMKO - Cambridge Biology Practice</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
+    <link rel="apple-touch-startup-image" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%231e7e34' width='100' height='100'/><text x='50' y='55' font-size='20' text-anchor='middle' fill='white' font-weight='bold'>Loading...</text></svg>">
+    <style>
+        :root {
+            --safe-area-top: env(safe-area-inset-top, 0px);
+            --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-area-left: env(safe-area-inset-left, 0px);
+            --safe-area-right: env(safe-area-inset-right, 0px);
+        }
+        
+        body {
+            padding-top: calc(0px + var(--safe-area-top));
+            padding-bottom: calc(0px + var(--safe-area-bottom));
+            padding-left: var(--safe-area-left);
+            padding-right: var(--safe-area-right);
+        }
+        
+        /* iOS notch safe area for header */
+        header {
+            padding-top: calc(15px + var(--safe-area-top));
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <h1>🧬 HIMKO</h1>
+                <p>Cambridge Biology Practice</p>
+            </div>
+        </header>
+
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="screen active">
+            <div class="welcome-card">
+                <h2>Welcome to HIMKO Biology</h2>
+                <p>Master Cambridge Biology with interactive questions designed for Grade 9 and 10 students based on the Cambridge Biology 4th Edition Course Book.</p>
+                
+                <div class="features">
+                    <div class="feature">
+                        <span class="icon">🧫</span>
+                        <span>Comprehensive Topics</span>
+                    </div>
+                    <div class="feature">
+                        <span class="icon">✅</span>
+                        <span>Instant Feedback</span>
+                    </div>
+                    <div class="feature">
+                        <span class="icon">📊</span>
+                        <span>Progress Tracking</span>
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="showGradeSelection()">Get Started</button>
+            </div>
+        </div>
+
+        <!-- Grade Selection Screen -->
+        <div id="grade-screen" class="screen">
+            <h2>Select Your Grade</h2>
+            <div class="grade-cards">
+                <div class="grade-card" onclick="selectGrade(9)">
+                    <div class="grade-number">9</div>
+                    <div class="grade-title">Grade 9</div>
+                    <div class="grade-topics">Cell Structure, Biological Molecules, Enzymes, Nutrition, Transport, Respiration</div>
+                </div>
+                <div class="grade-card" onclick="selectGrade(10)">
+                    <div class="grade-number">10</div>
+                    <div class="grade-title">Grade 10</div>
+                    <div class="grade-topics">Disease & Immunity, Excretion, Co-ordination, Inheritance, Ecology</div>
+                </div>
+            </div>
+            <button class="btn-secondary" onclick="showScreen('welcome-screen')">← Back</button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="screen">
+            <div class="quiz-header">
+                <div class="quiz-info">
+                    <span id="current-grade">Grade 9</span>
+                    <span class="separator">|</span>
+                    <span id="question-counter">Question 1/10</span>
+                </div>
+                <div class="score-display">
+                    <span>Score: </span>
+                    <span id="current-score">0</span>
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div id="progress-fill" class="progress-fill"></div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number">Question <span id="q-number">1</span></div>
+                <div class="question-text" id="question-text">
+                    Loading question...
+                </div>
+                <div class="topic-tag" id="topic-tag"></div>
+                <div class="options" id="options">
+                    <!-- Options will be dynamically inserted here -->
+                </div>
+            </div>
+
+            <div class="explanation" id="explanation" style="display: none;">
+                <h3>📝 Explanation</h3>
+                <p id="explanation-text"></p>
+            </div>
+
+            <div class="quiz-actions">
+                <button id="next-btn" class="btn-primary" onclick="nextQuestion()" style="display: none;">Next Question →</button>
+                <button id="finish-btn" class="btn-primary" onclick="showResults()" style="display: none;">Finish Quiz ✓</button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="screen">
+            <div class="results-card">
+                <div class="result-icon" id="result-icon">🏆</div>
+                <h2>Quiz Complete!</h2>
+                <div class="final-score">
+                    <span class="score-label">Your Score</span>
+                    <span class="score-value"><span id="final-score">0</span>/<span id="total-questions">10</span></span>
+                </div>
+                <div class="score-percentage">
+                    <span id="percentage">0%</span>
+                </div>
+                <div class="result-message" id="result-message">
+                    Great job!
+                </div>
+                
+                <div class="results-stats">
+                    <div class="stat">
+                        <span class="stat-icon">✓</span>
+                        <span class="stat-value" id="correct-count">0</span>
+                        <span class="stat-label">Correct</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-icon">✗</span>
+                        <span class="stat-value" id="incorrect-count">0</span>
+                        <span class="stat-label">Incorrect</span>
+                    </div>
+                </div>
+
+                <div class="result-actions">
+                    <button class="btn-primary" onclick="restartQuiz()">Try Again</button>
+                    <button class="btn-secondary" onclick="showScreen('grade-screen')">Change Grade</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 HIMKO - Cambridge Biology Practice Software</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
